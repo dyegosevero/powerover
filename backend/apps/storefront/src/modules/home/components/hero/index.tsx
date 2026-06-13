@@ -184,6 +184,28 @@ export default function Hero() {
   return (
     <div style={{ fontFamily: "var(--font-hanken), sans-serif", backgroundColor: "#fff" }}>
       <style>{`
+        @keyframes slideLeftFadeIn {
+          from { opacity: 0; transform: translateX(-40px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideRightFadeIn {
+          from { opacity: 0; transform: translateX(40px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideTopFadeIn {
+          from { opacity: 0; transform: translateX(calc(-50% + 20px)) translateY(-30px); }
+          to   { opacity: 1; transform: translateX(calc(-50% + 20px)) translateY(0); }
+        }
+        .hero-chevette-wrap {
+          animation: slideLeftFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .hero-lucio-wrap {
+          animation: slideTopFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+        }
+        .hero-bmw-wrap {
+          animation: slideRightFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+        }
+
         .car-img {
           filter: grayscale(1) saturate(0.5);
           transform: scale(1);
@@ -316,9 +338,8 @@ export default function Hero() {
           </div>
 
           {/* Lucio — centro, atrás dos carros */}
-          <div style={{
+          <div className="hero-lucio-wrap" style={{
             position: "absolute", bottom: 160, left: "50%",
-            transform: "translateX(calc(-50% + 20px))",
             zIndex: 1, pointerEvents: "none",
             display: "flex", alignItems: "flex-end",
           }}>
@@ -328,7 +349,7 @@ export default function Hero() {
           </div>
 
           {/* Chevette — esquerda */}
-          <div style={{ position: "absolute", bottom: 10, left: "2%", right: "50%", display: "flex", justifyContent: "flex-end", zIndex: hovered === "chevette" ? 3 : 1 }}
+          <div className="hero-chevette-wrap" style={{ position: "absolute", bottom: 10, left: "2%", right: "50%", display: "flex", justifyContent: "flex-end", zIndex: hovered === "chevette" ? 3 : 1 }}
             onMouseEnter={() => setHovered("chevette")} onMouseLeave={() => setHovered(null)}>
             <div className={`car-glow${hovered === "chevette" ? " active" : ""}`} />
             <div style={{ position: "relative", zIndex: 1, height: "clamp(190px, calc(28vh + 10px), 290px)", flexShrink: 0 }}>
@@ -349,7 +370,7 @@ export default function Hero() {
           </div>
 
           {/* BMW direita */}
-          <div style={{ position: "absolute", bottom: 9, left: "calc(50% - 40px)", right: "2%", display: "flex", justifyContent: "flex-start", zIndex: hovered === "bmw" ? 3 : 2 }}
+          <div className="hero-bmw-wrap" style={{ position: "absolute", bottom: 9, left: "calc(50% - 40px)", right: "2%", display: "flex", justifyContent: "flex-start", zIndex: hovered === "bmw" ? 3 : 2 }}
             onMouseEnter={() => setHovered("bmw")} onMouseLeave={() => setHovered(null)}>
             <div className={`car-glow${hovered === "bmw" ? " active" : ""}`} />
             <div style={{ position: "relative", zIndex: 1, height: "clamp(180px, 28vh, 280px)", flexShrink: 0 }}>
