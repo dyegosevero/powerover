@@ -19,7 +19,7 @@ export default async function Footer() {
                 style={{ height: 48, width: "auto", filter: "invert(1)", marginBottom: 8 }}
               />
               <p className="text-white/40 text-xs mt-2 tracking-widest uppercase">
-                Alta Performance · Drift · Track
+                Alta Performance · Suspensão · Câmbio · Kit Ângulo
               </p>
             </LocalizedClientLink>
           </div>

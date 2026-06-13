@@ -21,7 +21,7 @@ export default function NotFound() {
       </p>
       <Link href="/" style={{
         display: "inline-block", marginTop: 8,
-        backgroundColor: "#7ac142", color: "#fff",
+        backgroundColor: "#51c020", color: "#fff",
         padding: "12px 32px", fontSize: 11, fontWeight: 700,
         letterSpacing: "0.12em", textTransform: "uppercase",
         textDecoration: "none",

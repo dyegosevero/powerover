@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import SortProducts, { SortOptions } from "./sort-products"
+import { SortOptions } from "./sort-products"
 
 type RefinementListProps = {
   sortBy: SortOptions
@@ -21,18 +21,31 @@ const PRICE_RANGES = [
   { label: "Acima de R$50.000", min: 50000, max: null },
 ]
 
+const SORT_OPTIONS = [
+  { value: "created_at", label: "Mais recentes" },
+  { value: "price_asc", label: "Preço: menor → maior" },
+  { value: "price_desc", label: "Preço: maior → menor" },
+]
+
 const mainCategories = [
-  { label: "Drift", href: "/categories/drift" },
-  { label: "Track", href: "/categories/track" },
-  { label: "Preparação", href: "/categories/preparacao" },
+  { label: "Suspensão", href: "/categories/suspensao" },
+  { label: "Câmbio", href: "/categories/cambio" },
+  { label: "Kit Ângulo", href: "/categories/kit-angulo" },
   { label: "Peças Avulsas", href: "/store" },
 ]
+
+const itemStyle: React.CSSProperties = {
+  display: "block", padding: "7px 0",
+  fontSize: 13, fontWeight: 400,
+  color: "#333", textDecoration: "none",
+  borderBottom: "1px solid #f5f5f5",
+}
 
 const SECTION = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div style={{ marginBottom: 28 }}>
     <p style={{
       fontSize: 10, fontWeight: 700, letterSpacing: "0.14em",
-      textTransform: "uppercase", color: "#999", marginBottom: 12,
+      textTransform: "uppercase", color: "#999", marginBottom: 0,
       borderBottom: "1px solid #ececec", paddingBottom: 8,
     }}>
       {title}
@@ -40,6 +53,11 @@ const SECTION = ({ title, children }: { title: string; children: React.ReactNode
     {children}
   </div>
 )
+
+const CAR_OPTIONS = [
+  { label: "Chevette", value: "chevette" },
+  { label: "BMW E36", value: "bmw" },
+]
 
 const RefinementList = ({
   sortBy,
@@ -51,6 +69,7 @@ const RefinementList = ({
   const searchParams = useSearchParams()
 
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null)
+  const activeCar = searchParams.get("car") ?? null
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -66,17 +85,48 @@ const RefinementList = ({
     router.push(`${pathname}?${query}`)
   }
 
-  // Build category tree: only root-level (no parent)
   const rootCategories = categories.filter((c) => !c.parent_category_id)
 
   return (
     <aside style={{
-      minWidth: 220, width: 220, flexShrink: 0,
+      minWidth: 200, width: 200, flexShrink: 0,
       marginRight: 40, paddingTop: 4,
       position: "sticky", top: 72, alignSelf: "flex-start",
     }}>
 
-      {/* ── Categorias principais ──────────────── */}
+      {/* ── Carro ── */}
+      <SECTION title="Carro">
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {CAR_OPTIONS.map((car) => {
+            const active = activeCar === car.value
+            return (
+              <li key={car.value} style={{ borderBottom: "1px solid #f5f5f5" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "7px 0" }}>
+                  <input
+                    type="checkbox"
+                    checked={active}
+                    onChange={() => {
+                      const params = new URLSearchParams(searchParams)
+                      if (active) {
+                        params.delete("car")
+                      } else {
+                        params.set("car", car.value)
+                      }
+                      router.push(`${pathname}?${params.toString()}`)
+                    }}
+                    style={{ accentColor: "#51c020", cursor: "pointer", margin: 0 }}
+                  />
+                  <span style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#51c020" : "#333" }}>
+                    {car.label}
+                  </span>
+                </label>
+              </li>
+            )
+          })}
+        </ul>
+      </SECTION>
+
+      {/* ── Categorias ── */}
       <SECTION title="Categorias">
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {mainCategories.map((cat) => {
@@ -86,11 +136,9 @@ const RefinementList = ({
                 <LocalizedClientLink
                   href={cat.href}
                   style={{
-                    display: "block", padding: "7px 0",
-                    fontSize: 13, fontWeight: active ? 600 : 400,
-                    color: active ? "#7ac142" : "#333",
-                    textDecoration: "none",
-                    borderBottom: "1px solid #f5f5f5",
+                    ...itemStyle,
+                    fontWeight: active ? 600 : 400,
+                    color: active ? "#51c020" : "#333",
                   }}
                 >
                   {cat.label}
@@ -101,21 +149,13 @@ const RefinementList = ({
         </ul>
       </SECTION>
 
-      {/* ── Subcategorias do Medusa (se houver) ── */}
+      {/* ── Subcategorias ── */}
       {rootCategories.length > 0 && (
         <SECTION title="Subcategorias">
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {rootCategories.map((cat) => (
               <li key={cat.id}>
-                <LocalizedClientLink
-                  href={`/categories/${cat.handle}`}
-                  style={{
-                    display: "block", padding: "6px 0",
-                    fontSize: 13, fontWeight: 400,
-                    color: "#333", textDecoration: "none",
-                    borderBottom: "1px solid #f5f5f5",
-                  }}
-                >
+                <LocalizedClientLink href={`/categories/${cat.handle}`} style={itemStyle}>
                   {cat.name}
                 </LocalizedClientLink>
                 {cat.category_children && cat.category_children.length > 0 && (
@@ -124,12 +164,7 @@ const RefinementList = ({
                       <li key={sub.id}>
                         <LocalizedClientLink
                           href={`/categories/${sub.handle}`}
-                          style={{
-                            display: "block", padding: "5px 0",
-                            fontSize: 13, fontWeight: 400, color: "#666",
-                            textDecoration: "none",
-                            borderBottom: "1px solid #f9f9f9",
-                          }}
+                          style={{ ...itemStyle, color: "#666" }}
                         >
                           {sub.name}
                         </LocalizedClientLink>
@@ -143,12 +178,12 @@ const RefinementList = ({
         </SECTION>
       )}
 
-      {/* ── Faixa de preço ────────────────────── */}
+      {/* ── Faixa de preço ── */}
       <SECTION title="Faixa de preço">
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {PRICE_RANGES.map((range, i) => (
-            <li key={i} style={{ padding: "5px 0", borderBottom: "1px solid #f5f5f5" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <li key={i} style={{ borderBottom: "1px solid #f5f5f5" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "7px 0" }}>
                 <input
                   type="radio"
                   name="price_range"
@@ -158,7 +193,7 @@ const RefinementList = ({
                     setQueryParams("price_min", String(range.min * 100))
                     if (range.max !== null) setQueryParams("price_max", String(range.max * 100))
                   }}
-                  style={{ accentColor: "#7ac142", cursor: "pointer" }}
+                  style={{ accentColor: "#51c020", cursor: "pointer", margin: 0 }}
                 />
                 <span style={{ fontSize: 13, color: "#333" }}>{range.label}</span>
               </label>
@@ -175,7 +210,7 @@ const RefinementList = ({
                   router.push(`${pathname}?${params.toString()}`)
                 }}
                 style={{
-                  fontSize: 11, color: "#7ac142", background: "none",
+                  fontSize: 11, color: "#51c020", background: "none",
                   border: "none", cursor: "pointer", padding: 0,
                   textDecoration: "underline",
                 }}
@@ -187,21 +222,25 @@ const RefinementList = ({
         </ul>
       </SECTION>
 
-      {/* ── Ordenar por ───────────────────────── */}
-      <div style={{ marginBottom: 28 }}>
-        <p style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: "0.14em",
-          textTransform: "uppercase", color: "#999", marginBottom: 12,
-          borderBottom: "1px solid #ececec", paddingBottom: 8,
-        }}>
-          Ordenar por
-        </p>
-        <SortProducts
-          sortBy={sortBy}
-          setQueryParams={setQueryParams}
-          data-testid={dataTestId}
-        />
-      </div>
+      {/* ── Ordenar por ── */}
+      <SECTION title="Ordenar por">
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {SORT_OPTIONS.map((opt) => (
+            <li key={opt.value} style={{ borderBottom: "1px solid #f5f5f5" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "7px 0" }}>
+                <input
+                  type="radio"
+                  name="sort_by"
+                  checked={sortBy === opt.value}
+                  onChange={() => setQueryParams("sortBy", opt.value)}
+                  style={{ accentColor: "#51c020", cursor: "pointer", margin: 0 }}
+                />
+                <span style={{ fontSize: 13, color: "#333" }}>{opt.label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </SECTION>
 
     </aside>
   )

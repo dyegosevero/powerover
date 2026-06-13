@@ -2,9 +2,70 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* ── PowerOver Design Tokens v2 ────────────────────── */
+:root {
+  /* Azuis — identidade visual principal */
+  --po-cobalt:      #51c020;
+  --po-blue-mid:    #0047cc;
+  --po-blue-deep:   #0033aa;
+  --po-navy:        #001a80;
+  --po-midnight:    #00094d;
+
+  /* Neutros industriais */
+  --po-carbon:      #0d0d0d;
+  --po-graphite:    #1c1c1c;
+  --po-slate:       #2e3340;
+  --po-steel:       #8090a8;
+  --po-chrome:      #c8d8e8;
+
+  /* Gradientes aprovados */
+  --po-grad-hero:     linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 45%, #0a1030 80%, #001a80 100%);
+  --po-grad-cobalt:   linear-gradient(135deg, #001a80 0%, #51c020 100%);
+  --po-grad-midnight: linear-gradient(135deg, #00094d 0%, #0033aa 50%, #51c020 100%);
+}
+
+/* ── Shine effect — botões com classe .po-btn ──────── */
+.po-btn {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity .18s, transform .18s;
+}
+.po-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.32) 50%,
+    transparent 80%
+  );
+  transition: left .52s ease;
+  pointer-events: none;
+}
+.po-btn:hover::after {
+  left: 150%;
+}
+.po-btn:hover {
+  opacity: .92;
+}
+.po-btn:active {
+  transform: scale(.985);
+}
+
+/* ── Headlines → Anton ─────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-anton), 'Anton', sans-serif;
+  letter-spacing: 0.01em;
+}
+
 /* ── Global link hover ─────────────────────────────── */
-a:hover {
-  color: #7ac142 !important;
+a:not(.po-btn):not([class*="car-link"]):hover {
+  color: #51c020 !important;
   text-decoration: underline !important;
   text-underline-offset: 3px;
 }

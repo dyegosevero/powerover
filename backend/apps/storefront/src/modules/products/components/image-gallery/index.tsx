@@ -56,7 +56,7 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
                 flexShrink: 0,
                 overflow: "hidden",
                 background: "#f5f5f5",
-                border: i === active ? "2px solid #7ac142" : "2px solid transparent",
+                border: i === active ? "2px solid #51c020" : "2px solid transparent",
                 cursor: "pointer",
                 padding: 0,
                 outline: "none",

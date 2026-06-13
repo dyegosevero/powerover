@@ -28,7 +28,7 @@ export default function ContatoPage() {
 
       {/* ── Cabeçalho ── */}
       <div style={{ marginBottom: 48 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#7ac142", marginBottom: 8 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#1a6eff", marginBottom: 8 }}>
           Fale conosco
         </p>
         <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 800, color: "#111", margin: 0, lineHeight: 1.1 }}>
@@ -95,15 +95,14 @@ export default function ContatoPage() {
               </div>
               <button
                 type="submit"
+                className="po-btn"
                 style={{
-                  backgroundColor: "#7ac142", color: "#fff",
+                  background: "linear-gradient(135deg, #001a80 0%, #1a6eff 100%)", color: "#fff",
                   border: "none", padding: "14px 40px",
                   fontSize: 11, fontWeight: 700, letterSpacing: "0.12em",
                   textTransform: "uppercase", cursor: "pointer",
                   width: "100%",
                 }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = "#69aa38")}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = "#7ac142")}
               >
                 Enviar mensagem
               </button>

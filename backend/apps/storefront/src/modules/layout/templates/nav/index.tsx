@@ -1,11 +1,18 @@
 import { Suspense } from "react"
+import { headers } from "next/headers"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import NavLinks from "@modules/layout/components/nav-links"
+import SearchBar from "@modules/layout/components/search-bar"
 
 const font = "var(--font-montserrat), 'Montserrat', sans-serif"
 
-export default function Nav() {
+export default async function Nav() {
+  // Extrai countryCode do pathname (ex: /br/store → "br")
+  const headersList = await headers()
+  const pathname = headersList.get("x-invoke-path") || headersList.get("next-url") || "/br"
+  const countryCode = pathname.split("/")[1] || "br"
+
   return (
     <div style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <header style={{
@@ -26,7 +33,7 @@ export default function Nav() {
           position: "relative",
         }}>
 
-          {/* Logo — overflow ligeiro como no Wisefab */}
+          {/* Logo */}
           <LocalizedClientLink href="/" style={{ textDecoration: "none", marginRight: 40, flexShrink: 0, display: "flex" }}>
             <img
               src="/logo-po.png"
@@ -40,36 +47,12 @@ export default function Nav() {
 
           {/* Right: search + icons */}
           <div style={{ display: "flex", alignItems: "center", gap: 20, flexShrink: 0, marginLeft: "auto" }}>
-            {/* Search — compacta, sem borda vermelha */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              borderBottom: "1px solid #111",
-              padding: "4px 0",
-              gap: 6,
-              minWidth: 220,
-            }}>
-              <input
-                type="text"
-                placeholder="Buscar..."
-                style={{
-                  border: "none",
-                  outline: "none",
-                  fontSize: 13,
-                  color: "#111",
-                  fontFamily: font,
-                  width: "100%",
-                  background: "transparent",
-                }}
-              />
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.8" strokeLinecap="round">
-                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </div>
+
+            <SearchBar countryCode={countryCode} />
 
             {/* Account */}
             <LocalizedClientLink href="/account" style={{ color: "#111", display: "flex", alignItems: "center" }} data-testid="nav-account-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
@@ -78,7 +61,7 @@ export default function Nav() {
             {/* Cart */}
             <Suspense fallback={
               <LocalizedClientLink href="/cart" style={{ color: "#111", display: "flex", alignItems: "center" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                 </svg>

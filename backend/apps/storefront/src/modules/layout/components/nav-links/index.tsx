@@ -9,9 +9,9 @@ const font = "var(--font-montserrat), 'Montserrat', sans-serif"
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Loja", href: "/store" },
-  { label: "Drift", href: "/categories/drift" },
-  { label: "Track", href: "/categories/track" },
-  { label: "Preparação", href: "/categories/preparacao" },
+  { label: "Suspensão", href: "/categories/suspensao" },
+  { label: "Câmbio", href: "/categories/cambio" },
+  { label: "Kit Ângulo", href: "/categories/kit-angulo" },
   { label: "Contato", href: "/contato" },
 ]
 

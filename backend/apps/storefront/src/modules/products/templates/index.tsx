@@ -10,6 +10,7 @@ import FreteCalculator from "@modules/products/components/frete-calculator"
 import { notFound } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import Breadcrumb from "@modules/common/components/breadcrumb"
 
 import ProductActionsWrapper from "./product-actions-wrapper"
 
@@ -44,26 +45,6 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         data-testid="product-container"
         style={{ maxWidth: 1080, margin: "0 auto", padding: "24px 40px" }}
       >
-        {/* ── Breadcrumb ── */}
-        <nav style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 24, marginTop: 16, fontSize: 12, color: "#999" }}>
-          <LocalizedClientLink href="/" style={{ color: "#999", textDecoration: "none" }}>Home</LocalizedClientLink>
-          <span>/</span>
-          <LocalizedClientLink href="/store" style={{ color: "#999", textDecoration: "none" }}>Loja</LocalizedClientLink>
-          {product.categories && product.categories.length > 0 && (
-            <>
-              <span>/</span>
-              <LocalizedClientLink
-                href={`/categories/${product.categories[0].handle}`}
-                style={{ color: "#999", textDecoration: "none" }}
-              >
-                {product.categories[0].name}
-              </LocalizedClientLink>
-            </>
-          )}
-          <span>/</span>
-          <span style={{ color: "#333", fontWeight: 500 }}>{product.title}</span>
-        </nav>
-
         <div className="flex gap-10">
 
           {/* ── Galeria de imagens ──────────────── */}
@@ -94,6 +75,14 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                 }}>
                   {product.title}
                 </h1>
+                <Breadcrumb crumbs={[
+                  { label: "Home", href: "/" },
+                  { label: "Loja", href: "/store" },
+                  ...(product.categories && product.categories.length > 0
+                    ? [{ label: product.categories[0].name, href: `/categories/${product.categories[0].handle}` }]
+                    : []),
+                  { label: product.title },
+                ]} />
                 {product.description && (
                   <p style={{ fontSize: 13, color: "#777", marginTop: 8, lineHeight: 1.6 }}>
                     {product.description}
