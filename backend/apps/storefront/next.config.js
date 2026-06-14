@@ -40,6 +40,11 @@ const nextConfig = {
         hostname: "76.13.225.174",
       },
       {
+        protocol: "http",
+        hostname: "76.13.225.174",
+        port: "9000",
+      },
+      {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
       },
