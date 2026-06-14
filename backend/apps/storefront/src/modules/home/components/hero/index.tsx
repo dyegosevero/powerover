@@ -223,7 +223,7 @@ export default function Hero() {
           .hero-bg-dir { width: 50% !important; }
 
           /* Lúcio menor no mobile */
-          .hero-lucio-wrap { bottom: 20px !important; }
+          .hero-lucio-wrap { bottom: 40px !important; }
           .hero-lucio-wrap img { height: clamp(180px, 45vw, 280px) !important; }
 
           /* Labels — próximas aos carros, mais baixas */
@@ -404,7 +404,7 @@ export default function Hero() {
 
           {/* z:3 — Lucio entre bg e png-carros */}
           <div className="hero-lucio-wrap" style={{
-            position: "absolute", bottom: 160, left: "50%",
+            position: "absolute", bottom: 140, left: "50%",
             transform: "translateX(-50%)",
             zIndex: 3, pointerEvents: "none",
             display: "flex", alignItems: "flex-end",
@@ -507,7 +507,7 @@ export default function Hero() {
           }
           .marquee-item {
             font-family: var(--font-hanken), 'Hanken Grotesk', sans-serif;
-            font-size: 14px;
+            font-size: 22px;
             font-weight: 400;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -520,6 +520,17 @@ export default function Hero() {
             border-radius: 50%;
             display: inline-block;
             flex-shrink: 0;
+          }
+          @media (max-width: 639px) {
+            .marquee-item { padding: 0 12px !important; font-size: 11px !important; }
+          }
+          @media (max-width: 639px) {
+            .hero-bmw-wrap { width: 100% !important; overflow: visible !important; }
+            .hero-bmw-wrap img { right: 50% !important; left: auto !important; width: 60% !important; }
+            .hero-chevette-wrap { width: 100% !important; overflow: visible !important; }
+            .hero-chevette-wrap img { left: 50% !important; right: auto !important; width: 60% !important; }
+            .hero-bg-esq { right: 50% !important; left: auto !important; width: 60% !important; }
+            .hero-bg-dir { left: 50% !important; right: auto !important; width: 60% !important; }
           }
         `}</style>
         <div className="marquee-track">
