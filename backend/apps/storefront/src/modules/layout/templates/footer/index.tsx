@@ -92,6 +92,13 @@ export default async function Footer() {
           <Text className="txt-compact-small">
             © {new Date().getFullYear()} Powerover Motorsport. Todos os direitos reservados.
           </Text>
+          <Text className="txt-compact-small">
+            <style>{`.footer-dev-link { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; } .footer-dev-link:hover { color: #51c020; }`}</style>
+            Desenvolvido por{" "}
+            <a href="https://instagram.com/justdyego" target="_blank" rel="noopener noreferrer" className="footer-dev-link">Dyego</a>
+            {" "}do{" "}
+            <a href="https://efkz.com.br" target="_blank" rel="noopener noreferrer" className="footer-dev-link">Coletivo Efkz!</a>
+          </Text>
         </div>
       </div>
     </footer>

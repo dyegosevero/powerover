@@ -34,8 +34,8 @@ const sections = [
     img: "/susp-png.png",
     bg: "#888",
     dark: false,
-    titleColor: "#111",
-    descColor: "#333",
+    titleColor: "#fff",
+    descColor: "#ddd",
     imgPadding: "0",
   },
   {
@@ -196,14 +196,65 @@ export default function Hero() {
           from { opacity: 0; transform: translateX(calc(-50% + 20px)) translateY(-30px); }
           to   { opacity: 1; transform: translateX(calc(-50% + 20px)) translateY(0); }
         }
+        @keyframes slideBottomFadeIn {
+          from { opacity: 0; transform: translateX(calc(-50% + 20px)) translateY(40px); }
+          to   { opacity: 1; transform: translateX(calc(-50% + 20px)) translateY(0); }
+        }
+        /* delay base 0.4s — todos partem do mesmo ponto de espera */
         .hero-chevette-wrap {
-          animation: slideLeftFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation: slideLeftFadeIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
         }
         .hero-lucio-wrap {
-          animation: slideTopFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+          animation: slideBottomFadeIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
         }
         .hero-bmw-wrap {
-          animation: slideRightFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+          animation: slideRightFadeIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+        }
+        .hero-h1 {
+          animation: fadeInDown 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero-labels {
+          animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVO ────────────────────────────────────────── */
+
+        /* Tablet — 640px–1023px */
+        @media (max-width: 1023px) {
+          .hero-section { min-height: calc(80vh - 50px) !important; }
+          .hero-h1 { font-size: clamp(1.6rem, 4vw, 2.8rem) !important; top: clamp(40px, 7vh, 80px) !important; }
+          .hero-labels { bottom: 240px !important; }
+          .hero-lucio-wrap { bottom: 30px !important; }
+        }
+
+        /* Mobile — até 639px */
+        @media (max-width: 639px) {
+          .hero-section { min-height: calc(100svh - 50px) !important; }
+          .hero-h1 {
+            font-size: clamp(1.4rem, 6vw, 2rem) !important;
+            top: clamp(30px, 5vh, 60px) !important;
+            padding: 0 16px !important;
+          }
+          /* BGs empilhados: esq ocupa lado esquerdo 55%, dir lado direito 55% */
+          .hero-bg-esq { width: 55% !important; }
+          .hero-bg-dir { width: 55% !important; }
+          /* PNGs dos carros menores */
+          .hero-png-esq, .hero-png-dir { width: 55% !important; }
+          /* Lúcio some no mobile */
+          .hero-lucio-wrap { display: none !important; }
+          /* Labels menores e mais baixas */
+          .hero-labels { bottom: 120px !important; }
+          .hero-labels .car-title { font-size: clamp(1.4rem, 5vw, 2rem) !important; }
+          .hero-labels-inner { max-width: 100% !important; padding: 0 8px !important; }
+          .hero-spacer { flex: 0 0 60px !important; }
         }
 
         .car-img {
@@ -225,7 +276,7 @@ export default function Hero() {
           font-size: clamp(2.4rem, 3.8vw, 3.8rem);
           font-weight: 400;
           line-height: 1;
-          margin: 0 0 10px;
+          margin: 0 0 2px;
           letter-spacing: 0.01em;
           display: block;
           text-align: center;
@@ -287,108 +338,132 @@ export default function Hero() {
       `}</style>
 
       {/* ── HERO com carros ───────────────────────────────────── */}
-      <section style={{
+      <section className="hero-section" style={{
         backgroundColor: "#fff",
         position: "relative",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
         minHeight: "calc(95vh - 50px)",
       }}>
-        {/* H1 — uppercase, 2 linhas */}
-        <h1 style={{
+        {/* H1 — absoluto, overlaid no topo da section */}
+        <h1 className="hero-h1" style={{
           fontFamily: font,
-          fontSize: "clamp(2rem, 4vw, 3.8rem)",
+          fontSize: "clamp(2.16rem, 4.32vw, 4.08rem)",
           fontWeight: 400,
           color: "#111",
           textAlign: "center",
-          margin: "114px auto 0",
+          position: "absolute",
+          top: "clamp(60px, 10vh, 110px)",
+          left: 0,
+          right: 0,
+          zIndex: 6,
           lineHeight: 1.05,
-          maxWidth: "90%",
           letterSpacing: "-1pt",
           textTransform: "uppercase",
           padding: "0 24px",
+          pointerEvents: "none",
         } as React.CSSProperties}>
           <span style={{ color: "#51c020" }}>Peças</span> de alta performance<br />desenvolvidas <span style={{ color: "#51c020" }}>para vencer!</span>
         </h1>
 
-        {/* Espaço flexível entre título e área dos carros */}
-        <div style={{ flexGrow: 1 }} />
+        {/* Área das imagens — preenche toda a section */}
+        <div style={{ position: "absolute", inset: 0 }}>
 
-        {/* Área das imagens + labels juntos no bottom */}
-        <div style={{ width: "100%", position: "relative", height: "52vh", minHeight: 360 }}>
-          {/* Barra preta no rodapé */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 160, backgroundColor: "#232323", zIndex: 0 }} />
+          {/* z:1 — Fundo preto rodapé */}
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 160, backgroundColor: "#232323", zIndex: 1 }} />
 
-          {/* Labels posicionados acima dos carros */}
-          <div style={{ position: "absolute", bottom: "calc(28vh + 82px)", left: "15%", right: "15%", display: "flex", zIndex: 4 }}>
-            {cars.map((car) => (
-              <div key={car.id} className="car-group"
-                style={{ paddingTop: 12, paddingBottom: 10 }}
-                onMouseEnter={() => setHovered(car.id)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                <span className={`car-title${hovered === car.id ? " active" : ""}`}>{car.title}</span>
-                <div>
-                  <Link href={car.saiba} className="car-link">Saiba mais</Link>
-                  <Link href={car.produtos} className="car-link">Produtos</Link>
-                </div>
-              </div>
+          {/* z:2 — BG esquerdo */}
+          <img src="/bg-esq.png" alt="" fetchPriority="high" decoding="async" className="hero-bg-esq"
+            style={{ position: "absolute", bottom: 0, left: 0, width: "50%", height: "auto", display: "block", zIndex: 2, filter: "grayscale(1)" }} />
+
+          {/* z:2 — BG direito */}
+          <img src="/bg-dir.png" alt="" fetchPriority="high" decoding="async" className="hero-bg-dir"
+            style={{ position: "absolute", bottom: 0, right: 0, width: "50%", height: "auto", display: "block", zIndex: 2, filter: "grayscale(1)" }} />
+
+          {/* z:3 — Lucio entre bg e png-carros */}
+          <div className="hero-lucio-wrap" style={{
+            position: "absolute", bottom: 85, left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 3, pointerEvents: "none",
+            display: "flex", alignItems: "flex-end",
+          }}>
+            <Image src="/lucio-piloto.png" alt="Lucio Turossi" width={340} height={580}
+              style={{ height: "clamp(319px, calc(53vh), 595px)", width: "auto", display: "block" }}
+              priority />
+          </div>
+
+          {/* z:4 — PNG esquerdo com glitch+shake */}
+          <div className="hero-bmw-wrap" style={{
+            position: "absolute", top: 0, bottom: 0, left: 0, width: "50%",
+            margin: 0, padding: 0, zIndex: hovered === "chevette" ? 5 : 4, overflow: "hidden",
+          }}
+            onMouseEnter={() => setHovered("chevette")} onMouseLeave={() => setHovered(null)}>
+            <img src="/png-esq.png" alt="Chevette Drift" fetchPriority="high" decoding="async" className={`hero-png-esq car-img${hovered === "chevette" ? " active" : ""}`}
+              className={`car-img${hovered === "chevette" ? " active" : ""}`}
+              style={{
+                position: "absolute", bottom: 0, right: 0, width: "100%", height: "auto", display: "block",
+                transform: hovered === "chevette" ? `translateX(${chevShake}px)` : undefined,
+              }} />
+            {chevSlices.map((s, i) => (
+              <div key={i} style={{
+                position: "absolute", inset: 0, pointerEvents: "none",
+                backgroundImage: "url(/png-esq.png)",
+                backgroundSize: "100% auto", backgroundRepeat: "no-repeat", backgroundPosition: "right bottom",
+                clipPath: `inset(${s.top}% 0 ${Math.max(0, 100 - s.top - s.height)}% 0)`,
+                transform: `translateX(${s.dx}px)`,
+              }} />
             ))}
           </div>
 
-          {/* Lucio — centro, atrás dos carros */}
-          <div className="hero-lucio-wrap" style={{
-            position: "absolute", bottom: 160, left: "50%",
-            zIndex: 1, pointerEvents: "none",
-            display: "flex", alignItems: "flex-end",
-          }}>
-            <Image src="/lucio-png-2.png" alt="Lucio Turossi" width={340} height={520}
-              style={{ height: "clamp(280px, calc(40.5vh + 25px), 490px)", width: "auto", display: "block" }}
-              priority unoptimized />
-          </div>
-
-          {/* Chevette — esquerda */}
-          <div className="hero-chevette-wrap" style={{ position: "absolute", bottom: 10, left: "2%", right: "50%", display: "flex", justifyContent: "flex-end", zIndex: hovered === "chevette" ? 3 : 1 }}
-            onMouseEnter={() => setHovered("chevette")} onMouseLeave={() => setHovered(null)}>
-            <div className={`car-glow${hovered === "chevette" ? " active" : ""}`} />
-            <div style={{ position: "relative", zIndex: 1, height: "clamp(190px, calc(28vh + 10px), 290px)", flexShrink: 0 }}>
-              <Image src="/chevette-novo-2.png" alt="Chevette Drift" width={480} height={260}
-                className={`car-img${hovered === "chevette" ? " active" : ""}`}
-                style={{ width: "auto", height: "100%", display: "block", transform: hovered === "chevette" ? `translateX(${chevShake}px) scale(1.06)` : undefined }}
-                priority unoptimized />
-              {chevSlices.map((s, i) => (
-                <div key={i} style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  backgroundImage: "url(/chevette-novo-2.png)",
-                  backgroundSize: "auto 100%", backgroundRepeat: "no-repeat", backgroundPosition: "right bottom",
-                  clipPath: `inset(${s.top}% 0 ${Math.max(0, 100 - s.top - s.height)}% 0)`,
-                  transform: `translateX(${s.dx}px)`,
-                }} />
-              ))}
-            </div>
-          </div>
-
-          {/* BMW direita */}
-          <div className="hero-bmw-wrap" style={{ position: "absolute", bottom: 9, left: "calc(50% - 40px)", right: "2%", display: "flex", justifyContent: "flex-start", zIndex: hovered === "bmw" ? 3 : 2 }}
+          {/* z:4 — PNG direito com glitch+shake */}
+          <div className="hero-chevette-wrap" style={{
+            position: "absolute", top: 0, bottom: 0, right: 0, width: "50%",
+            margin: 0, padding: 0, zIndex: hovered === "bmw" ? 5 : 4, overflow: "hidden",
+          }}
             onMouseEnter={() => setHovered("bmw")} onMouseLeave={() => setHovered(null)}>
-            <div className={`car-glow${hovered === "bmw" ? " active" : ""}`} />
-            <div style={{ position: "relative", zIndex: 1, height: "clamp(180px, 28vh, 280px)", flexShrink: 0 }}>
-              <Image src="/bmw-nova-2.png" alt="BMW E36 Direita" width={480} height={260}
-                className={`car-img${hovered === "bmw" ? " active" : ""}`}
-                style={{ width: "auto", height: "100%", display: "block", transform: hovered === "bmw" ? `translateX(${bmwShake}px) scale(1.06)` : undefined }}
-                priority unoptimized />
-              {bmwSlices.map((s, i) => (
-                <div key={i} style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  backgroundImage: "url(/bmw-nova-2.png)",
-                  backgroundSize: "auto 100%", backgroundRepeat: "no-repeat", backgroundPosition: "left bottom",
-                  clipPath: `inset(${s.top}% 0 ${Math.max(0, 100 - s.top - s.height)}% 0)`,
-                  transform: `translateX(${s.dx}px)`,
-                }} />
-              ))}
+            <img src="/png-dir.png" alt="BMW E36" fetchPriority="high" decoding="async" className={`hero-png-dir car-img${hovered === "bmw" ? " active" : ""}`}
+              className={`car-img${hovered === "bmw" ? " active" : ""}`}
+              style={{
+                position: "absolute", bottom: 0, left: 0, width: "100%", height: "auto", display: "block",
+                transform: hovered === "bmw" ? `translateX(${bmwShake}px)` : undefined,
+              }} />
+            {bmwSlices.map((s, i) => (
+              <div key={i} style={{
+                position: "absolute", inset: 0, pointerEvents: "none",
+                backgroundImage: "url(/png-dir.png)",
+                backgroundSize: "100% auto", backgroundRepeat: "no-repeat", backgroundPosition: "left bottom",
+                clipPath: `inset(${s.top}% 0 ${Math.max(0, 100 - s.top - s.height)}% 0)`,
+                transform: `translateX(${s.dx}px)`,
+              }} />
+            ))}
+          </div>
+
+          {/* Labels Chevette / BMW — dentro do mesmo container do H1 */}
+          <div className="hero-labels" style={{ position: "absolute", bottom: 418, left: 0, right: 0, zIndex: 6, pointerEvents: "none", display: "flex", justifyContent: "center" }}>
+            <div className="hero-labels-inner" style={{ width: "100%", maxWidth: 900, display: "flex", padding: "0 24px" }}>
+              <div className="car-group" style={{ flex: 1, pointerEvents: "auto", alignItems: "flex-start" }}
+                onMouseEnter={() => setHovered("chevette")} onMouseLeave={() => setHovered(null)}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <span className={`car-title${hovered === "chevette" ? " active" : ""}`}>Chevette</span>
+                  <div style={{ display: "flex" }}>
+                    <Link href="/br/store?q=chevette" className="car-link">Saiba mais</Link>
+                    <Link href="/br/store?q=chevette" className="car-link">Produtos</Link>
+                  </div>
+                </div>
+              </div>
+              <div className="hero-spacer" style={{ flex: "0 0 200px" }} />
+              <div className="car-group" style={{ flex: 1, pointerEvents: "auto", alignItems: "flex-end" }}
+                onMouseEnter={() => setHovered("bmw")} onMouseLeave={() => setHovered(null)}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <span className={`car-title${hovered === "bmw" ? " active" : ""}`}>BMW E36</span>
+                  <div style={{ display: "flex" }}>
+                    <Link href="/br/store?q=bmw" className="car-link">Saiba mais</Link>
+                    <Link href="/br/store?q=bmw" className="car-link">Produtos</Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -508,17 +583,36 @@ export default function Hero() {
 
       {/* ── CTA FINAL ────────────────────────────────────────── */}
       <section style={{
-        background: "linear-gradient(160deg, #111111 0%, #1a1a1a 50%, #0f0f0f 100%)",
         padding: "96px 40px",
         display: "flex", justifyContent: "center", alignItems: "center",
         position: "relative", overflow: "hidden",
+        backgroundColor: "#0f0f0f",
       }}>
+        {/* Vimeo background — mudo, loop, sem controles */}
         <div style={{
-          position: "absolute", width: 600, height: 600, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(122,193,66,0.08) 0%, transparent 70%)",
-          top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none",
-        }} />
-        <div style={{ textAlign: "center", maxWidth: 560, width: "100%", position: "relative", zIndex: 1 }}>
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden",
+        }}>
+          <iframe
+            src="https://player.vimeo.com/video/1201088427?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0"
+            style={{
+              position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "177.78vh",
+              minWidth: "100%",
+              height: "56.25vw",
+              minHeight: "100%",
+              border: "none",
+              opacity: 0.18,
+            }}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+        {/* overlay escuro para garantir legibilidade */}
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1, pointerEvents: "none" }} />
+        <div style={{ textAlign: "center", maxWidth: 560, width: "100%", position: "relative", zIndex: 2 }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.28em", textTransform: "uppercase", color: "#51c020", marginBottom: 20 }}>
             PowerOver Motorsports Factory
           </p>
