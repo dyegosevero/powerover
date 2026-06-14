@@ -4,6 +4,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import CartButton from "@modules/layout/components/cart-button"
 import NavLinks from "@modules/layout/components/nav-links"
 import SearchBar from "@modules/layout/components/search-bar"
+import MobileMenu from "@modules/layout/components/mobile-menu"
 
 const font = "var(--font-montserrat), 'Montserrat', sans-serif"
 
@@ -42,11 +43,16 @@ export default async function Nav() {
             />
           </LocalizedClientLink>
 
-          {/* Nav links */}
-          <NavLinks />
+          {/* Nav links — oculto no mobile */}
+          <div className="desktop-nav"><NavLinks /></div>
 
           {/* Right: search + icons */}
           <div style={{ display: "flex", alignItems: "center", gap: 20, flexShrink: 0, marginLeft: "auto" }}>
+            <style>{`
+              .desktop-nav { display: flex; height: 100%; }
+              @media (max-width: 768px) { .desktop-nav { display: none; } }
+              [data-testid="nav-cart-link"] svg { width: 17px !important; height: 17px !important; display: block; }
+            `}</style>
 
             <SearchBar countryCode={countryCode} />
 
@@ -70,6 +76,9 @@ export default async function Nav() {
               <CartButton />
             </Suspense>
           </div>
+
+          {/* Hamburger — só mobile */}
+          <MobileMenu />
 
         </div>
       </header>

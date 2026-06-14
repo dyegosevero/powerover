@@ -33,6 +33,14 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "www.powerover.com.br",
+      },
+      {
+        protocol: "http",
+        hostname: "76.13.225.174",
+      },
+      {
+        protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
       },
       {
