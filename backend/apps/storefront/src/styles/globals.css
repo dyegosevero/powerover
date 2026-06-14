@@ -64,7 +64,7 @@ h1, h2, h3 {
 }
 
 /* ── Global link hover ─────────────────────────────── */
-a:not(.po-btn):not([class*="car-link"]):hover {
+a:not(.po-btn):not([class*="car-link"]):not([class*="car-title"]):hover {
   color: #51c020 !important;
   text-decoration: underline !important;
   text-underline-offset: 3px;
