@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
@@ -16,6 +17,7 @@ type Props = {
 }
 
 export async function generateStaticParams() {
+  return []
   const product_categories = await listCategories()
 
   if (!product_categories) {
