@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { SortOptions } from "./sort-products"
@@ -68,8 +68,11 @@ const RefinementList = ({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [selectedPrice, setSelectedPrice] = useState<number | null>(null)
   const activeCar = searchParams.get("car") ?? null
+  const activeMin = searchParams.get("price_min")
+  const selectedPrice = activeMin !== null
+    ? PRICE_RANGES.findIndex((r) => String(r.min * 100) === activeMin)
+    : null
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -189,9 +192,14 @@ const RefinementList = ({
                   name="price_range"
                   checked={selectedPrice === i}
                   onChange={() => {
-                    setSelectedPrice(i)
-                    setQueryParams("price_min", String(range.min * 100))
-                    if (range.max !== null) setQueryParams("price_max", String(range.max * 100))
+                    const params = new URLSearchParams(searchParams)
+                    params.set("price_min", String(range.min * 100))
+                    if (range.max !== null) {
+                      params.set("price_max", String(range.max * 100))
+                    } else {
+                      params.delete("price_max")
+                    }
+                    router.push(`${pathname}?${params.toString()}`)
                   }}
                   style={{ accentColor: "#51c020", cursor: "pointer", margin: 0 }}
                 />
@@ -203,7 +211,6 @@ const RefinementList = ({
             <li style={{ paddingTop: 8 }}>
               <button
                 onClick={() => {
-                  setSelectedPrice(null)
                   const params = new URLSearchParams(searchParams)
                   params.delete("price_min")
                   params.delete("price_max")

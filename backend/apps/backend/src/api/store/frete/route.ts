@@ -4,12 +4,7 @@ type MelhorEnvioServico = {
   id: number
   name: string
   price: string | null
-  custom_price: string | null
-  discount: string | null
-  currency: string
-  delivery_time: number
   delivery_range: { min: number; max: number }
-  custom_delivery_time: number
   custom_delivery_range: { min: number; max: number }
   company: { id: number; name: string; picture: string }
   error?: string
@@ -32,7 +27,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     return res.status(500).json({ error: "Configuração de frete incompleta." })
   }
 
-  // Validate CEP via ViaCEP
   try {
     const viaCepRes = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
     const viaCepData = await viaCepRes.json() as any
@@ -40,12 +34,11 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       return res.status(404).json({ error: "CEP não encontrado." })
     }
 
-    // Get product dimensions and weight from Medusa
-    let peso = 0.3       // kg default
-    let altura = 5       // cm
-    let largura = 15     // cm
-    let comprimento = 20 // cm
-    let valor = 100      // R$ insurance value
+    let peso = 0.3
+    let altura = 5
+    let largura = 15
+    let comprimento = 20
+    let valor = 100
 
     if (productId) {
       try {
@@ -55,39 +48,13 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
           fields: ["weight", "height", "width", "length", "variants.prices.amount"],
           filters: { id: productId },
         }) as any
-
         const p = products?.[0]
         if (p?.weight) peso = Math.max(0.1, p.weight / 1000)
-        if (p?.height) altura = Math.max(2, p.height / 10)       // mm → cm
+        if (p?.height) altura = Math.max(2, p.height / 10)
         if (p?.width) largura = Math.max(11, p.width / 10)
         if (p?.length) comprimento = Math.max(16, p.length / 10)
-        if (p?.variants?.[0]?.prices?.[0]?.amount) {
-          valor = p.variants[0].prices[0].amount / 100
-        }
-      } catch {
-        // use defaults
-      }
-    }
-
-    // Call Melhor Envio
-    const body = {
-      from: { postal_code: cepOrigem },
-      to: { postal_code: cep },
-      products: [
-        {
-          id: productId || "1",
-          width: Math.ceil(largura),
-          height: Math.ceil(altura),
-          length: Math.ceil(comprimento),
-          weight: peso,
-          insurance_value: valor,
-          quantity: 1,
-        },
-      ],
-      options: {
-        receipt: false,
-        own_hand: false,
-      },
+        if (p?.variants?.[0]?.prices?.[0]?.amount) valor = p.variants[0].prices[0].amount / 100
+      } catch { /* use defaults */ }
     }
 
     const meRes = await fetch(ME_URL, {
@@ -98,18 +65,32 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         Accept: "application/json",
         "User-Agent": "PowerOver Motorsports (dyego@efkz.com.br)",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        from: { postal_code: cepOrigem },
+        to: { postal_code: cep },
+        products: [{
+          id: productId || "1",
+          width: Math.ceil(largura),
+          height: Math.ceil(altura),
+          length: Math.ceil(comprimento),
+          weight: peso,
+          insurance_value: valor,
+          quantity: 1,
+        }],
+        options: { receipt: false, own_hand: false },
+      }),
     })
 
     if (!meRes.ok) {
       const errText = await meRes.text()
-      console.error("Melhor Envio error:", errText)
-      return res.status(502).json({ error: "Erro ao consultar transportadoras." })
+      console.error(`Melhor Envio error (${meRes.status}):`, errText)
+      let detail = ""
+      try { detail = JSON.parse(errText)?.message || errText } catch { detail = errText }
+      return res.status(502).json({ error: "Erro ao consultar transportadoras.", detail })
     }
 
     const servicos: MelhorEnvioServico[] = await meRes.json()
 
-    // Filter out errors and sort by price
     const opcoes = servicos
       .filter((s) => !s.error && s.price !== null)
       .sort((a, b) => parseFloat(a.price!) - parseFloat(b.price!))
@@ -128,14 +109,9 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         }),
       }))
 
-    res.json({
-      cep,
-      localidade: viaCepData.localidade,
-      uf: viaCepData.uf,
-      opcoes,
-    })
+    res.json({ cep, localidade: viaCepData.localidade, uf: viaCepData.uf, opcoes })
   } catch (error: any) {
     console.error("Frete route error:", error)
-    res.status(500).json({ error: "Erro ao calcular frete. Tente novamente." })
+    res.status(500).json({ error: error.message || "Erro ao calcular frete." })
   }
 }

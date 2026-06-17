@@ -74,6 +74,34 @@
 
 ---
 
+## 📝 Notas de progresso (loop autônomo — 2026-06-14)
+
+### Sessão 2 — itens concluídos sem interação do usuário
+- **U2** ✅ Filtro de preço funcional: `price_min`/`price_max` agora são lidos da URL, passados pelo StoreTemplate e aplicados no PaginatedProducts com `filterByPrice()`. RefinementList corrigido para single push e estado sincronizado com URL (sem useState, derivado de searchParams).
+- **M6** ✅ SEO categoria: metadata deixou de dizer "Medusa Store", agora é `{nome} | PowerOver Motorsports` com description em PT-BR.
+- **M7** ✅ Página `/politica-de-trocas` criada — CDC 7 dias, prazos de defeito, condições, custos de envio, reembolso.
+- **M8** ✅ Página `/termos-de-uso` criada — LGPD completo, dados coletados, direitos do titular, cookies, propriedade intelectual.
+- **Footer** ✅ Links "Trocas e Devoluções", "Termos de Uso", "Privacidade (LGPD)" e "Fale Conosco" adicionados na coluna Legal.
+- **U8** já estava implementado (breadcrumb na categoria funcionando).
+- **Central de Ajuda** ✅ `/CENTRAL-DE-AJUDA.md` criado — guia completo de configuração, operação diária, troubleshooting e base de conhecimento para agente IA.
+
+### Sessão 3 — itens concluídos
+- **C1** ✅ Melhor Envio funcionando — token pessoal OAuth com shipping-calculate, CEP origem 83408280 (Colombo/PR), 14 transportadoras retornando
+- **A2** ✅ Formulário de contato integrado — endpoint `/store/contato` envia e-mail real via Resend para contato@powerover.com.br
+- **A4** ✅ Página `/rastreamento` criada — rastreia via Melhor Envio API + fallback Correios, link no footer
+- **U4** ✅ Galeria com zoom/lightbox — clique na imagem abre fullscreen com navegação por setas e teclado
+- **U7** ✅ Search autocomplete — dropdown com thumbnail, título e preço dos produtos em tempo real
+- **Admin email templates** ✅ — painel em `/admin/email-templates` com editor HTML, preview live e envio de teste
+- **Resend module** — comentado no medusa-config.ts (precisa `npm install resend` no VPS antes de reativar)
+
+### Pendente (requer ação do usuário)
+- C2: Token MercadoPago real → painel.mercadopago.com.br → Credenciais de Produção
+- C3: Ativar MercadoPago no admin → Settings → Regions → Brasil → Payment Providers
+- C4: Vincular produtos ao Default Shipping Profile no admin
+- A6: Número real de WhatsApp — atualizar em `/contato/page.tsx` (linha "41) 99999-9999") e no footer
+
+---
+
 ## ✅ Concluído nesta sessão
 
 - [x] Moeda BRL adicionada como padrão na store

@@ -15,6 +15,17 @@ type PaginatedProductsParams = {
   q?: string
 }
 
+function filterByPrice(products: any[], priceMin?: number, priceMax?: number): any[] {
+  if (priceMin === undefined && priceMax === undefined) return products
+  return products.filter((p) => {
+    const price = p.variants?.[0]?.calculated_price?.calculated_amount
+    if (price === undefined || price === null) return true
+    if (priceMin !== undefined && price < priceMin) return false
+    if (priceMax !== undefined && price > priceMax) return false
+    return true
+  })
+}
+
 function filterByCarTag(products: any[], carFilter?: string): any[] {
   if (!carFilter || carFilter === "todos") return products
   return products.filter((p) => {
@@ -40,6 +51,8 @@ export default async function PaginatedProducts({
   countryCode,
   searchQuery,
   carFilter,
+  priceMin,
+  priceMax,
 }: {
   sortBy?: SortOptions
   page: number
@@ -49,9 +62,12 @@ export default async function PaginatedProducts({
   countryCode: string
   searchQuery?: string
   carFilter?: string
+  priceMin?: number
+  priceMax?: number
 }) {
+  const needsClientFilter = (carFilter && carFilter !== "todos") || priceMin !== undefined || priceMax !== undefined
   const queryParams: PaginatedProductsParams = {
-    limit: carFilter && carFilter !== "todos" ? 100 : 12,
+    limit: needsClientFilter ? 100 : 12,
   }
 
   if (collectionId) queryParams["collection_id"] = [collectionId]
@@ -67,13 +83,13 @@ export default async function PaginatedProducts({
   const {
     response: { products: allProducts },
   } = await listProductsWithSort({
-    page: carFilter && carFilter !== "todos" ? 1 : page,
+    page: needsClientFilter ? 1 : page,
     queryParams,
     sortBy,
     countryCode,
   })
 
-  const products = filterByCarTag(allProducts, carFilter)
+  const products = filterByPrice(filterByCarTag(allProducts, carFilter), priceMin, priceMax)
   const count = products.length
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 

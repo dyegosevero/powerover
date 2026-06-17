@@ -29,5 +29,19 @@ module.exports = defineConfig({
         ],
       },
     },
+    {
+      resolve: "@medusajs/medusa/notification",
+      options: {
+        providers: [{
+          resolve: "./src/modules/resend",
+          id: "resend",
+          channels: ["email"],
+          options: {
+            api_key: process.env.RESEND_API_KEY!,
+            from: "PowerOver Motorsports <noreply@powerover.com.br>",
+          },
+        }],
+      },
+    },
   ],
 })

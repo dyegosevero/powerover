@@ -14,12 +14,16 @@ const StoreTemplate = async ({
   countryCode,
   searchQuery,
   carFilter,
+  priceMin,
+  priceMax,
 }: {
   sortBy?: SortOptions
   page?: string
   countryCode: string
   searchQuery?: string
   carFilter?: string
+  priceMin?: number
+  priceMax?: number
 }) => {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -49,6 +53,8 @@ const StoreTemplate = async ({
             countryCode={countryCode}
             searchQuery={searchQuery}
             carFilter={carFilter}
+            priceMin={priceMin}
+            priceMax={priceMax}
           />
         </Suspense>
       </div>

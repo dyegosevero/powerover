@@ -84,6 +84,36 @@ export default async function Footer() {
                     Todos os Produtos
                   </LocalizedClientLink>
                 </li>
+                <li>
+                  <LocalizedClientLink href="/contato" className="text-white/60 hover:text-white transition-colors">
+                    Fale Conosco
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/rastreamento" className="text-white/60 hover:text-white transition-colors">
+                    Rastrear Pedido
+                  </LocalizedClientLink>
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <span className="text-xs tracking-widest uppercase text-white/50 mb-2">Legal</span>
+              <ul className="grid grid-cols-1 gap-y-2 text-sm">
+                <li>
+                  <LocalizedClientLink href="/politica-de-trocas" className="text-white/60 hover:text-white transition-colors">
+                    Trocas e Devoluções
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/termos-de-uso" className="text-white/60 hover:text-white transition-colors">
+                    Termos de Uso
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink href="/termos-de-uso" className="text-white/60 hover:text-white transition-colors">
+                    Privacidade (LGPD)
+                  </LocalizedClientLink>
+                </li>
               </ul>
             </div>
           </div>
