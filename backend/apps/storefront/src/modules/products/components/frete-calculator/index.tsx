@@ -43,12 +43,7 @@ export default function FreteCalculator({ productId }: { productId?: string }) {
       const params = new URLSearchParams({ cep: digits })
       if (productId) params.set("product_id", productId)
 
-      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
-      const pubKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || ""
-
-      const res = await fetch(`${backendUrl}/store/frete?${params}`, {
-        headers: { "x-publishable-api-key": pubKey },
-      })
+      const res = await fetch(`/api/frete?${params}`)
       const data = await res.json()
 
       if (!res.ok) {

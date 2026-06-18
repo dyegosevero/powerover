@@ -14,15 +14,9 @@ export default function ContatoPage() {
     setErro(null)
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
-      const pubKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || ""
-
-      const res = await fetch(`${backendUrl}/store/contato`, {
+      const res = await fetch(`/api/contato`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-publishable-api-key": pubKey,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       })
       const data = await res.json()
